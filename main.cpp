@@ -69,8 +69,7 @@ bool printDictionary(CPDF_Dictionary *dictionary, bool old_level) {
 /**
  * PDFium library example
  *
- * Used Pdfium library (http://podofo.sourceforge.net/) licensed under the Apache License, Version 2.0
- * Documentation: http://podofo.sourceforge.net/doc/html/index.html
+ * Used Pdfium library (https://pdfium.googlesource.com/pdfium/) licensed under the Apache License, Version 2.0
  * Dependencies: freetype2, pthread
  * g++ -Iinclude -I/usr/include/freetype2 main.cpp libpdfium.a -lpthread
  */
