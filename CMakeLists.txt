@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.14)
+project(pdfium_fpdf_poc)
+set(CMAKE_CXX_STANDARD 17)
+include_directories(~/pdfium-binaries/pdfium /usr/include/freetype2)
+add_executable(pdfium_fpdf_poc main.cpp)
+target_link_libraries(pdfium_fpdf_poc /usr/lib/libpdfium.a)
+target_link_libraries(pdfium_fpdf_poc pthread)
