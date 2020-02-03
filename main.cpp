@@ -1,6 +1,8 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "public/fpdfview.h"
 #include "core/fxcrt/fx_stream.h"
 #include "fpdfsdk/cpdfsdk_helpers.h"
@@ -94,6 +96,9 @@ int main(int argc, char **argv) {
     }
     CPDF_Document *doc = pDocument.release();
     CPDF_Parser *parser = doc->GetParser();
+    string dir = string(argv[1]).append(".pdfium_out");
+    rmdir(dir.c_str());
+    mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     for (unsigned int i = 1; i <= parser->GetLastObjNum(); ++i) {
         if (parser->IsValidObjectNumber(i)) {
             auto obj = parser->ParseIndirectObject(i);
@@ -104,7 +109,7 @@ int main(int argc, char **argv) {
                 CPDF_Stream *object_stream = obj->AsStream();
                 // Output file name
                 ostringstream file_name;
-                file_name << "pdf_";
+                file_name << dir << "/pdf_";
                 file_name.width(4);
                 file_name.fill ('0');
                 file_name << i << "_0.dat";
