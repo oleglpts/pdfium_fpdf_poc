@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
                 // Output file name
                 ostringstream file_name;
                 file_name << dir << "/pdf_";
-                file_name.width(4);
+                file_name.width(7);
                 file_name.fill ('0');
                 file_name << i << "_0.dat";
                 auto data_buffer = pdfium::MakeRetain<CPDF_StreamAcc>(object_stream);
