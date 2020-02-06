@@ -99,9 +99,14 @@ int main(int argc, char **argv) {
     string dir = string(argv[1]).append(".pdfium_out");
     rmdir(dir.c_str());
     mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    const CPDF_CrossRefTable *table = parser->GetCrossRefTable();
     for (unsigned int i = 1; i <= parser->GetLastObjNum(); ++i) {
         if (parser->IsValidObjectNumber(i)) {
-            auto obj = parser->ParseIndirectObject(i);
+            const CPDF_CrossRefTable::ObjectInfo *info = table->GetObjectInfo(i);
+            fxcrt::RetainPtr<CPDF_Object> obj = parser->ParseIndirectObject(i);
+            if (!obj.Get() && info->type == CPDF_CrossRefTable::ObjectType::kObjStream) {
+                obj = parser->ParseIndirectObjectAt(table->GetObjectInfo(i)->pos, i);
+            }
             if (obj.Get() && obj->IsStream()) {
                 bool stream_decode = true;
                 std::cout << "    Object " << i << " has stream ";
