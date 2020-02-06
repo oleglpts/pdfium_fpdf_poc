@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
         if (parser->IsValidObjectNumber(i)) {
             const CPDF_CrossRefTable::ObjectInfo *info = table->GetObjectInfo(i);
             fxcrt::RetainPtr<CPDF_Object> obj = parser->ParseIndirectObject(i);
-            if (!obj.Get() && info->type == CPDF_CrossRefTable::ObjectType::kObjStream) {
+            if (!obj.Get() && info) {
                 obj = parser->ParseIndirectObjectAt(table->GetObjectInfo(i)->pos, i);
             }
             if (obj.Get() && obj->IsStream()) {
@@ -125,10 +125,17 @@ int main(int argc, char **argv) {
                     data_buffer->LoadAllDataRaw();
                     cout << " (filter omitted)";
                 }
+                if (stream_decode && !data_buffer->GetSize()) {
+                    data_buffer = pdfium::MakeRetain<CPDF_StreamAcc>(object_stream);
+                    data_buffer->LoadAllDataRaw();
+                    cout << " (empty buffer, raw output)";
+                }
                 unsigned char *data = data_buffer->GetData();
                 ofstream stream_file(file_name.str());
                 for (unsigned int j=0; j < data_buffer->GetSize(); stream_file << *data++, j++);
                 cout << endl;
+            }
+            else {
             }
         }
     }
